@@ -23,5 +23,11 @@ describe('<Space />', () => {
         done();
     });
 
+    it("should display an empty value by default", done => {
+        wrapper = mount(<Space />);
+        expect(wrapper.render().text()).toEqual("");
+        done();
+    });
+
 });
 
