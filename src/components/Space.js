@@ -1,5 +1,5 @@
 import React from 'react';
 
-const Space = () => <div />
+const Space = ({ value }) => <div>{value}</div>
 
 export default Space;
