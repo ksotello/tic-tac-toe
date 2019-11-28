@@ -1,4 +1,5 @@
 import GameGrid from './GameGrid';
 import Space from './Space';
+import GameManager from './GameManager';
 
-export { GameGrid, Space };
+export { GameGrid, Space, GameManager };
