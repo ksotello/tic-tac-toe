@@ -12,8 +12,14 @@ describe('<Space />', () => {
     });
 
     it('should mount without issue', done => {
-        wrapper = mount(<Space />)
+        wrapper = mount(<Space />);
         expect(wrapper.exists()).toBe(true);
+        done();
+    });
+
+    it("should display a value", done => {
+        wrapper = mount(<Space value="X" />);
+        expect(wrapper.render().text()).toEqual("X");
         done();
     });
 
