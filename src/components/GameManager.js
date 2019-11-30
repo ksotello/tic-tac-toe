@@ -8,9 +8,10 @@ const GameManager = ({ player1, player2, children }) => {
 
     const getCurrentTurn = () => currentTurn;
     const advanceTurn = () => ++currentTurn;
+    const reverseTurn = () => currentTurn > 0 ? --currentTurn : currentTurn = 0;
 
     return (
-        <GameContext.Provider value={{ ...turnManager, getCurrentTurn, advanceTurn }}>
+        <GameContext.Provider value={{ ...turnManager, getCurrentTurn, advanceTurn, reverseTurn }}>
             {children}
         </GameContext.Provider>
     );
