@@ -20,9 +20,9 @@ describe('<GameManager />', () => {
 
     it('should provide turn information', done => {
         const GameManagerChild = () => {
-            const gameContext = useContext(GameContext);
+            const { player1, player2 } = useContext(GameContext);
 
-            return <div {...gameContext}></div>
+            return <div player1={player1} player2={player2}></div>
         };
 
         const wrapper = mount(
