@@ -21,6 +21,10 @@ class TurnManager {
     getTurn({ player, turn }) {
         return this.turnHistory[player].turns[turn];
     }
+
+    removeTurn({ player, turn }) {
+        this.turnHistory[player].turns.splice((turn - 1), 1);
+    }
 }
 
 export default TurnManager;
