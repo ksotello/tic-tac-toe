@@ -42,4 +42,25 @@ describe('The TurnManager', () => {
 
         expect(turnManager.getTurn({ player: player1, turn: 0 })).toEqual(position1);
     });
+
+    it('should remove turns', () => {
+        const position1 = { x: 0, y: 0 };
+        const position2 = { x: 2, y: 8 };
+        const position3 = { x: 3, y: 9 };
+        const position4 = { x: 0, y: 7 };
+
+        const turnManager = new TurnManager({ player1, player2 });
+
+        turnManager.setTurn({ player: player1, position: position1 });
+        turnManager.setTurn({ player: player1, position: position2 });
+        turnManager.setTurn({ player: player1, position: position3 });
+        turnManager.setTurn({ player: player1, position: position4 });
+
+        expect(turnManager.turnHistory[player1].turns.length).toBe(4);
+
+        turnManager.removeTurn({ player: player1, turn: 4 });
+        turnManager.removeTurn({ player: player1, turn: 3 });
+
+        expect(turnManager.turnHistory[player1].turns.length).toBe(2);
+    });
 });
