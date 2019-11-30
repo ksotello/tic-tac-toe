@@ -17,6 +17,10 @@ class TurnManager {
     setTurn({ player, position }) {
         this.turnHistory[player].turns.push(position);
     }
+
+    getTurn({ player, turn }) {
+        return this.turnHistory[player].turns[turn];
+    }
 }
 
 export default TurnManager;
