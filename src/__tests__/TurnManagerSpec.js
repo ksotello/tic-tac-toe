@@ -18,5 +18,18 @@ describe('The TurnManager', () => {
         const turnManager = new TurnManager({ player1, player2 });
         expect(turnManager.turnHistory[player1].turns instanceof Array).toBe(true);
         expect(turnManager.turnHistory[player2].turns instanceof Array).toBe(true);
-    })
+    });
+
+    it('should set turns', () => {
+        const position1 = { x: 0, y: 7 };
+        const position2 = { x: 1, y: 8 };
+
+        const turnManager = new TurnManager({ player1, player2 });
+
+        turnManager.setTurn({ player: player1, position: position1 });
+        turnManager.setTurn({ player: player1, position: position2 });
+
+        expect(turnManager.turnHistory[player1].turns[0]).toEqual(position1);
+        expect(turnManager.turnHistory[player1].turns[1]).toEqual(position2);
+    });
 });
