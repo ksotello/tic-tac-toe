@@ -37,5 +37,23 @@ describe('<GameManager />', () => {
 
         done();
     });
+
+    it('should keep track of turns', done => {
+        const GameManagerChild = () => {
+            const { player1, player2, getCurrentTurn } = useContext(GameContext);
+
+            return <div player1={player1} player2={player2} getCurrentTurn={getCurrentTurn}></div>
+        };
+
+        const wrapper = mount(
+            <GameManager player1="bruce" player2="sue">
+                <GameManagerChild />
+            </GameManager>
+        );
+
+        const { getCurrentTurn } = wrapper.find("div").props();
+        expect(getCurrentTurn()).toBe(0);
+        done();
+    });
 });
 
