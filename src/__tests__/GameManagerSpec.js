@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { act } from "react-dom/test-utils";
 import { mount } from 'enzyme';
 
 import { GameManager } from '../components';
@@ -53,6 +54,42 @@ describe('<GameManager />', () => {
 
         const { getCurrentTurn } = wrapper.find("div").props();
         expect(getCurrentTurn()).toBe(0);
+        done();
+    });
+
+    it('should advance turns', done => {
+        const GameManagerChild = () => {
+            const { player1, player2, getCurrentTurn, advanceTurn } = useContext(GameContext);
+
+            return (
+                <div 
+                    player1={player1}
+                    player2={player2}
+                    getCurrentTurn={getCurrentTurn}
+                    advanceTurn={advanceTurn}
+                />
+            )
+        };
+
+        const wrapper = mount(
+            <GameManager player1="bruce" player2="sue">
+                <GameManagerChild />
+            </GameManager>
+        );
+
+        const { getCurrentTurn, advanceTurn } = wrapper.find("div").props();
+        
+        expect(getCurrentTurn()).toBe(0);
+
+        act(() => {
+            advanceTurn();
+            advanceTurn();
+            advanceTurn();
+            advanceTurn();
+        });
+        
+        expect(getCurrentTurn()).toBe(4);
+
         done();
     });
 });
