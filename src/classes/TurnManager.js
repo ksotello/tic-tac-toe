@@ -13,6 +13,10 @@ class TurnManager {
             }
         }
     }
+
+    setTurn({ player, position }) {
+        this.turnHistory[player].turns.push(position);
+    }
 }
 
 export default TurnManager;
