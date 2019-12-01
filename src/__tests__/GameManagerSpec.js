@@ -84,10 +84,10 @@ describe('<GameManager />', () => {
         expect(wrapper.render().text()).toBe("0");
         
         act(() => {
-            advanceTurn();
-            advanceTurn();
-            advanceTurn();
-            advanceTurn();
+            advanceTurn({ player: "sue", position: { x: 0, y: 7 } });
+            advanceTurn({ player: "sue", position: { x: 1, y: 8 } });
+            advanceTurn({ player: "sue", position: { x: 3, y: 9 } });
+            advanceTurn({ player: "sue", position: { x: 0, y: 6 } });
         });
         
         expect(wrapper.render().text()).toBe("4");
@@ -124,8 +124,8 @@ describe('<GameManager />', () => {
         expect(wrapper.render().text()).toBe("0");
         
         act(() => {
-            advanceTurn();
-            advanceTurn();
+            advanceTurn({ player: "bruce", position: { x: 0, y: 7 } });
+            advanceTurn({ player: "sue", position: { x: 1, y: 8 } });
         });
 
         expect(wrapper.render().text()).toBe("2");
@@ -139,6 +139,43 @@ describe('<GameManager />', () => {
         });
 
         expect(wrapper.render().text()).toBe("0");
+
+        done();
+    });
+
+    it('when it advances turns it should also advance a players move', done => {
+        const GameManagerChild = () => {
+            const { player1, player2, advanceTurn, turnHistory } = useContext(GameContext);
+
+            return (
+                <div 
+                    player1={player1}
+                    player2={player2}
+                    advanceTurn={advanceTurn}
+                >
+                    {turnHistory[player1].turns.map(({ x, y }) => <div>[{player1} x: {x}, y: {y}]</div>)}
+                    {turnHistory[player2].turns.map(({ x, y }) => <div>[{player2} x: {x}, y: {y}]</div>)}
+                </div>
+            )
+        };
+
+        act(() => {
+            wrapper = mount(
+                <GameManager player1="bruce" player2="sue">
+                    <GameManagerChild />
+                </GameManager>
+            );
+        });
+
+        const { advanceTurn } = wrapper.find("div").props();
+        
+        act(() => {
+            advanceTurn({ player: "bruce", position: { x: 0, y: 7 } });
+            advanceTurn({ player: "sue", position: { x: 1, y: 8 } });
+        });
+        
+        expect(wrapper.render().text()).toMatch(new RegExp(`[bruce x: 0, y: 7]`));
+        expect(wrapper.render().text()).toMatch(new RegExp(`[sue x: 1, y: 8]`));
 
         done();
     });
