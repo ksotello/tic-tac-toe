@@ -179,5 +179,59 @@ describe('<GameManager />', () => {
 
         done();
     });
+
+    it('when it reverses turns it should also reverse a players move', done => {
+        const displayCurrentTurnInfo = currentTurn => {
+            if (currentTurn) {
+                return `x: ${currentTurn.x}, y: ${currentTurn.y}`;
+            }
+        }
+
+        const GameManagerChild = () => {
+            const { player1, player2, advanceTurn, turnHistory, reverseTurn, currentTurn } = useContext(GameContext);
+
+            return (
+                <div 
+                    player1={player1}
+                    player2={player2}
+                    advanceTurn={advanceTurn}
+                    reverseTurn={reverseTurn}
+                >
+                    [{player1} {`${displayCurrentTurnInfo(turnHistory[player1].turns[currentTurn])}` || "[]"}]
+                </div>
+            )
+        };
+
+        act(() => {
+            wrapper = mount(
+                <GameManager player1="bruce" player2="sue">
+                    <GameManagerChild />
+                </GameManager>
+            );
+        });
+
+        const { advanceTurn, reverseTurn } = wrapper.find("div").props();
+        
+        act(() => {
+            advanceTurn({ player: "bruce", position: { x: 0, y: 7 } });
+            advanceTurn({ player: "sue", position: { x: 1, y: 8 } });
+
+            advanceTurn({ player: "bruce", position: { x: 0, y: 6 } });
+            advanceTurn({ player: "sue", position: { x: 2, y: 9 } });
+        });
+        
+        expect(wrapper.render().text()).toMatch(new RegExp(`[bruce x: 0, y: 6]`));
+        expect(wrapper.render().text()).toMatch(new RegExp(`[sue x: 2, y: 9]`));
+
+        act(() => {
+            reverseTurn();
+            reverseTurn();
+        });
+
+        expect(wrapper.render().text()).toMatch(new RegExp(`[bruce x: 0, y: 7]`));
+        expect(wrapper.render().text()).toMatch(new RegExp(`[sue x: 1, y: 8]`));
+
+        done();
+    });
 });
 
