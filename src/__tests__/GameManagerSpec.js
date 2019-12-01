@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { act } from 'react-dom/test-utils';
 import { mount } from 'enzyme';
 
 import { GameManager } from '../components';
@@ -25,7 +26,7 @@ describe('<GameManager />', () => {
             return <div player1={player1} player2={player2}></div>
         };
 
-        const wrapper = mount(
+        wrapper = mount(
             <GameManager player1="bruce" player2="sue">
                 <GameManagerChild />
             </GameManager>
@@ -40,93 +41,104 @@ describe('<GameManager />', () => {
 
     it('should keep track of turns', done => {
         const GameManagerChild = () => {
-            const { player1, player2, getCurrentTurn } = useContext(GameContext);
+            const { player1, player2, currentTurn } = useContext(GameContext);
 
-            return <div player1={player1} player2={player2} getCurrentTurn={getCurrentTurn}></div>
+            return <div player1={player1} player2={player2}>{currentTurn}</div>
         };
 
-        const wrapper = mount(
+        wrapper = mount(
             <GameManager player1="bruce" player2="sue">
                 <GameManagerChild />
             </GameManager>
         );
 
-        const { getCurrentTurn } = wrapper.find("div").props();
-        expect(getCurrentTurn()).toBe(0);
+        expect(wrapper.render().text()).toBe("0");
         done();
     });
 
     it('should advance turns', done => {
         const GameManagerChild = () => {
-            const { player1, player2, getCurrentTurn, advanceTurn } = useContext(GameContext);
+            const { player1, player2, currentTurn, advanceTurn } = useContext(GameContext);
 
             return (
                 <div 
                     player1={player1}
                     player2={player2}
-                    getCurrentTurn={getCurrentTurn}
                     advanceTurn={advanceTurn}
-                />
+                >
+                    {currentTurn}
+                </div>
             )
         };
 
-        const wrapper = mount(
-            <GameManager player1="bruce" player2="sue">
-                <GameManagerChild />
-            </GameManager>
-        );
+        act(() => {
+            wrapper = mount(
+                <GameManager player1="bruce" player2="sue">
+                    <GameManagerChild />
+                </GameManager>
+            );
+        });
 
-        const { getCurrentTurn, advanceTurn } = wrapper.find("div").props();
+        const { advanceTurn } = wrapper.find("div").props();
         
-        expect(getCurrentTurn()).toBe(0);
-
-        advanceTurn();
-        advanceTurn();
-        advanceTurn();
-        advanceTurn();
+        expect(wrapper.render().text()).toBe("0");
         
-        expect(getCurrentTurn()).toBe(4);
+        act(() => {
+            advanceTurn();
+            advanceTurn();
+            advanceTurn();
+            advanceTurn();
+        });
+        
+        expect(wrapper.render().text()).toBe("4");
 
         done();
     });
 
     it('should be able to reverse turns', done => {
         const GameManagerChild = () => {
-            const { player1, player2, getCurrentTurn, advanceTurn, reverseTurn } = useContext(GameContext);
+            const { player1, player2, currentTurn, advanceTurn, reverseTurn } = useContext(GameContext);
 
             return (
                 <div 
                     player1={player1}
                     player2={player2}
-                    getCurrentTurn={getCurrentTurn}
                     advanceTurn={advanceTurn}
                     reverseTurn={reverseTurn}
-                />
+                >
+                    {currentTurn}
+                </div>
             )
         };
 
-        const wrapper = mount(
-            <GameManager player1="bruce" player2="sue">
-                <GameManagerChild />
-            </GameManager>
-        );
+        act(() => {
+            wrapper = mount(
+                <GameManager player1="bruce" player2="sue">
+                    <GameManagerChild />
+                </GameManager>
+            );
+        });
 
-        const { getCurrentTurn, advanceTurn, reverseTurn } = wrapper.find("div").props();
+        const { advanceTurn, reverseTurn } = wrapper.find("div").props();
         
-        expect(getCurrentTurn()).toBe(0);
-
-        advanceTurn();
-        advanceTurn();
-
-        expect(getCurrentTurn()).toBe(2);
+        expect(wrapper.render().text()).toBe("0");
         
-        reverseTurn();
-        reverseTurn();
-        reverseTurn();
-        reverseTurn();
-        reverseTurn();
+        act(() => {
+            advanceTurn();
+            advanceTurn();
+        });
 
-        expect(getCurrentTurn()).toBe(0);
+        expect(wrapper.render().text()).toBe("2");
+        
+        act(() => {
+            reverseTurn();
+            reverseTurn();
+            reverseTurn();
+            reverseTurn();
+            reverseTurn();
+        });
+
+        expect(wrapper.render().text()).toBe("0");
 
         done();
     });
