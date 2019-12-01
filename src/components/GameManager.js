@@ -5,16 +5,21 @@ import { GameContext } from '../providers';
 let turnCounter = 0;
 
 const GameManager = ({ player1, player2, children }) => {
-    const turnManager = new TurnManager({ player1, player2 });
     const [currentTurn, setCurrentTurn] = useState(null);
+    const [turnManager, setTurnManager] = useState(new TurnManager({ player1, player2 }));
 
     useEffect(() => {
         setCurrentTurn(turnCounter);
-
         return () => turnCounter = 0;
     }, [])
 
-    const advanceTurn = () => setCurrentTurn(++turnCounter);
+    const advanceTurn = ({ player, position }) => {
+        turnManager.turnHistory[player].turns.push(position);
+
+        setTurnManager(turnManager)
+        setCurrentTurn(++turnCounter);
+    };
+
     const reverseTurn = () => setCurrentTurn(turnCounter > 0 ? --turnCounter : 0);
 
     return (
