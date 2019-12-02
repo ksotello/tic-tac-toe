@@ -48,12 +48,12 @@ const GameManager = ({ player1, player2, children }) => {
 
     const advanceTurn = ({ player, position }) => {
         turnManager.turnHistory[player].turns.push(position);
+
+        setTurnManager(turnManager)
+        setCurrentTurn(++turnCounter);
         
         if (isWinner({ player })) {
             setWinningPlayer(player);
-        } else {
-            setTurnManager(turnManager)
-            setCurrentTurn(++turnCounter);
         }
     };
 
