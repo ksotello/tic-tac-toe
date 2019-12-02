@@ -1,4 +1,5 @@
 import React from 'react';
+import { Grid } from '@material-ui/core';
 
 import { Space } from "."
 
@@ -13,9 +14,9 @@ const generateSpaces = () => {
 }
 
 export default () => (
-    <div className="--wrapper">
+    <Grid container className="--wrapper">
         {generateSpaces().map((space, index) => {
             return React.createElement(space, { index });
         })}
-    </div>
+    </Grid>
 )
