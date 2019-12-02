@@ -26,7 +26,6 @@ const getY = index => {
 export default () => (
     <Grid container className="--wrapper">
         {generateSpaces().map((space, index) => {
-            console.log(index);
             return React.createElement(space, { x: index, y: getY(index), key: index, value: "X" });
         })}
     </Grid>
