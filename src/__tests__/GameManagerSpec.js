@@ -221,7 +221,7 @@ describe('<GameManager />', () => {
         });
         
         expect(wrapper.render().text()).toMatch(new RegExp(`[bruce x: 0, y: 6]`));
-        expect(wrapper.render().text()).toMatch(new RegExp(`[sue x: 2, y: 9]`));
+        expect(wrapper.render().text()).toMatch(new RegExp(`[sue x: 1, y: 9]`));
 
         act(() => {
             reverseTurn();
@@ -230,6 +230,61 @@ describe('<GameManager />', () => {
 
         expect(wrapper.render().text()).toMatch(new RegExp(`[bruce x: 0, y: 7]`));
         expect(wrapper.render().text()).toMatch(new RegExp(`[sue x: 1, y: 8]`));
+
+        done();
+    });
+
+    it('should determine the winner of a game', done => {
+        const GameManagerChild = () => {
+            const {
+                player1,
+                player2,
+                advanceTurn,
+                reverseTurn,
+                getWinner,
+            } = useContext(GameContext);
+
+            return (
+                <div 
+                    player1={player1}
+                    player2={player2}
+                    advanceTurn={advanceTurn}
+                    reverseTurn={reverseTurn}
+                >
+                    {getWinner()}
+                </div>
+            )
+        };
+
+        act(() => {
+            wrapper = mount(
+                <GameManager player1="bruce" player2="sue">
+                    <GameManagerChild />
+                </GameManager>
+            );
+        });
+
+        const { advanceTurn } = wrapper.find("div").props();
+
+        /**
+         * Game Grid
+         * 
+         * (0, 0), (1, 0), (2, 0)
+         * (3, 1), (4, 1), (5, 1)
+         * (6, 2), (7, 2) ,(8, 2)
+         */
+        
+        act(() => {
+            advanceTurn({ player: "bruce", position: { x: 0, y: 0 } });
+            advanceTurn({ player: "sue", position: { x: 1, y: 0 } });
+
+            advanceTurn({ player: "bruce", position: { x: 3, y: 1 } });
+            advanceTurn({ player: "sue", position: { x: 4, y: 1 } });
+
+            advanceTurn({ player: "bruce", position: { x: 6, y: 2 } });
+        });
+        
+        expect(wrapper.render().text()).toEqual("bruce");
 
         done();
     });
